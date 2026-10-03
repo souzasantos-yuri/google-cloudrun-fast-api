@@ -1,0 +1,27 @@
+networks:
+  mynet:
+    name: my-shared-db-network
+
+services:
+  postgres:
+    image: postgres:14.22
+    container_name: dev-database
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - PGUSER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=fake_data
+    ports:
+      - "5433:5432"
+    networks:
+      - mynet
+  fastapi:
+    container_name: cloudrun-api
+    build:
+      context: .
+      dockerfile: DockerFile
+    ports:
+      - "8080:8080"
+    networks:
+      - mynet
